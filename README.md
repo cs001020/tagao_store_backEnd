@@ -10,7 +10,7 @@
 ## 1.下载
 克隆完整项目
 ```git
-git clone https://github.com/cs001020/hmdp.git
+git clone https://github.com/cs001020/tagao_store_backEnd.git
 ```
 切换分支
 ```git
