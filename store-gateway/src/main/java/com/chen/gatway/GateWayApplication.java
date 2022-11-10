@@ -10,9 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2022/11/09
  */
 @SpringBootApplication
-public class GayWayApplication {
+public class GateWayApplication {
     public static void main(String[] args) {
-        SpringApplication.run(GayWayApplication.class,args);
+        SpringApplication.run(GateWayApplication.class,args);
     }
 
 }

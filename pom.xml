@@ -8,8 +8,9 @@
     <artifactId>tagao_store_backEnd</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>store-gatway</module>
+        <module>store-gateway</module>
         <module>store-commons</module>
+        <module>store-front-user</module>
     </modules>
     <packaging>pom</packaging>
 
