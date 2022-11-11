@@ -15,6 +15,7 @@ import com.chen.product.service.PictureService;
 import com.chen.product.service.ProductService;
 import com.chen.untils.R;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,6 +40,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     private PictureService pictureService;
 
     @Override
+    @Cacheable(value = "list.product",key = "#productPromoParam.categoryName",cacheManager = "cacheManagerDay")
     public R promo(ProductPromoParam productPromoParam) {
         //远程调用 获得类别数据
         R categoryByName = categoryClient.getCategoryByName(productPromoParam.getCategoryName());
@@ -62,6 +64,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
+    @Cacheable(value = "list.product",key = "#productHotParam.categoryName")
     public R hots(ProductHotParam productHotParam) {
         //远程调用类别服务
         R hots = categoryClient.hots(productHotParam);
@@ -84,6 +87,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
+    @Cacheable(value = "list.category",key = "#root.methodName")
     public R categoryList() {
         R r = categoryClient.list();
         log.info("ProductServiceImpl.categoryList业务结束，结果:{}",r);
@@ -91,6 +95,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
+    @Cacheable(value = "list.product",key = "#params.categoryID+'-'+#params.currentPage+'-'+#params.pageSize")
     public R byCategoryIds(ProductCategoryIdsParams params) {
         List<Integer> categoryID = params.getCategoryID();
         LambdaQueryChainWrapper<Product> productLambdaQueryChainWrapper = lambdaQuery();
@@ -105,6 +110,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
+    @Cacheable(value = "product",key = "#param.productID")
     public R detail(ProductIdParam param) {
         R ok = R.ok(getById(param.getProductID()));
         log.info("ProductServiceImpl.detail业务结束，结果:{}",ok);
@@ -112,6 +118,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
+    @Cacheable(value = "picture",key = "#param.productID")
     public R picture(ProductIdParam param) {
         //查询数据库
         List<Picture> pictureList = pictureService
