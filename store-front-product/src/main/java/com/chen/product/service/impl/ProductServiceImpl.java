@@ -137,4 +137,16 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         log.info("ProductServiceImpl.search业务结束，结果:{}",result);
         return result;
     }
+
+    @Override
+    @Cacheable(value = "list.product",key = "#productCollectParam.productIds")
+    public R getProductListByProductIds(ProductCollectParam productCollectParam) {
+        //查询数据库
+        List<Product> productList = lambdaQuery().in(Product::getProductId, productCollectParam.getProductIds()).list();
+
+        //封装结果
+        R ok = R.ok("查询成功", productList);
+        log.info("ProductServiceImpl.getProductListByProductIds业务结束，结果:{}",ok);
+        return ok;
+    }
 }
