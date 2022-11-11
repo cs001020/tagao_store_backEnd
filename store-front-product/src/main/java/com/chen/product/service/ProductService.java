@@ -1,10 +1,7 @@
 package com.chen.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.chen.param.ProductCategoryIdsParams;
-import com.chen.param.ProductHotParam;
-import com.chen.param.ProductIdParam;
-import com.chen.param.ProductPromoParam;
+import com.chen.param.*;
 import com.chen.pojo.Product;
 import com.chen.untils.R;
 
@@ -62,4 +59,12 @@ public interface ProductService extends IService<Product> {
      * @return {@link R}
      */
     R picture(ProductIdParam param);
+
+    /**
+     * 搜索
+     *
+     * @param productSearchParam 产品搜索参数
+     * @return {@link R}
+     */
+    R search(ProductSearchParam productSearchParam);
 }

@@ -1,9 +1,6 @@
 package com.chen.product.controller;
 
-import com.chen.param.ProductCategoryIdsParams;
-import com.chen.param.ProductHotParam;
-import com.chen.param.ProductIdParam;
-import com.chen.param.ProductPromoParam;
+import com.chen.param.*;
 import com.chen.product.service.ProductService;
 import com.chen.untils.R;
 import org.springframework.validation.BindingResult;
@@ -78,5 +75,10 @@ public class ProductController {
             return R.fail("参数异常，查询失败!");
         }
         return productService.picture(param);
+    }
+
+    @PostMapping("/search")
+    public R search(@RequestBody ProductSearchParam productSearchParam){
+        return productService.search(productSearchParam);
     }
 }

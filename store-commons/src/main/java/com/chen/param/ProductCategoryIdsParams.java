@@ -12,9 +12,8 @@ import java.util.List;
  * @date 2022/11/11
  */
 @Data
-public class ProductCategoryIdsParams {
+public class ProductCategoryIdsParams extends PageParam{
     @NotNull
     private List<Integer> categoryID;
-    private Integer currentPage=1;
-    private Integer pageSize=15;
+
 }

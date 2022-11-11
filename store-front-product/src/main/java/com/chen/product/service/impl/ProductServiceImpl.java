@@ -4,10 +4,8 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chen.client.CategoryClient;
-import com.chen.param.ProductCategoryIdsParams;
-import com.chen.param.ProductHotParam;
-import com.chen.param.ProductIdParam;
-import com.chen.param.ProductPromoParam;
+import com.chen.client.SearchClient;
+import com.chen.param.*;
 import com.chen.pojo.Category;
 import com.chen.pojo.Picture;
 import com.chen.pojo.Product;
@@ -34,6 +32,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     /**引入feign客户端需要在启动类添加配置注解*/
     @Resource
     private CategoryClient categoryClient;
+    @Resource
+    private SearchClient searchClient;
     @Resource
     private PictureService pictureService;
 
@@ -121,5 +121,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         R ok = R.ok(pictureList);
         log.info("ProductServiceImpl.picture业务结束，结果:{}",ok);
         return ok;
+    }
+
+    @Override
+    public R search(ProductSearchParam productSearchParam) {
+        R result = searchClient.searchProduct(productSearchParam);
+        log.info("ProductServiceImpl.search业务结束，结果:{}",result);
+        return result;
     }
 }
