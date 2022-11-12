@@ -1,6 +1,7 @@
 package com.chen.client;
 
 import com.chen.param.ProductCollectParam;
+import com.chen.param.ProductIdParam;
 import com.chen.pojo.Product;
 import com.chen.untils.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -37,4 +38,10 @@ public interface ProductClient {
      */
     @PostMapping("/product/collect/list")
     R getProductListByProductIds(@RequestBody ProductCollectParam productCollectParam);
+
+    @PostMapping("/product/cart/detail")
+    Product productDetail(@RequestBody ProductIdParam productIdParam);
+
+    @PostMapping("/product/cart/list")
+    List<Product> cartList(@RequestBody ProductCollectParam productCollectParam);
 }
