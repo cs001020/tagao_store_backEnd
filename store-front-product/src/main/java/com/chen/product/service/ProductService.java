@@ -3,7 +3,10 @@ package com.chen.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chen.param.*;
 import com.chen.pojo.Product;
+import com.chen.to.OrderToProduct;
 import com.chen.untils.R;
+
+import java.util.List;
 
 /**
  * 产品服务
@@ -75,4 +78,11 @@ public interface ProductService extends IService<Product> {
      * @return {@link R}
      */
     R getProductListByProductIds(ProductCollectParam productCollectParam);
+
+    /**
+     * 减少库存
+     *
+     * @param orderToProducts 以产品
+     */
+    void subNumber(List<OrderToProduct> orderToProducts);
 }

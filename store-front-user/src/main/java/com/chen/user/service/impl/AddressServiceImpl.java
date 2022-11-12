@@ -40,7 +40,7 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
             return R.fail("插入异常，请稍后再试！");
         }
         List<Address> list = lambdaQuery().eq(Address::getUserId, address.getUserId()).list();
-        return R.ok("查询成功",list);
+        return R.ok("添加成功",list);
     }
 
     @Override

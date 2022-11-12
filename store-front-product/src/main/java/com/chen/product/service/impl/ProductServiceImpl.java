@@ -13,6 +13,7 @@ import com.chen.pojo.Product;
 import com.chen.product.mapper.ProductMapper;
 import com.chen.product.service.PictureService;
 import com.chen.product.service.ProductService;
+import com.chen.to.OrderToProduct;
 import com.chen.untils.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,6 +22,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 产品服务impl
@@ -148,5 +152,22 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         R ok = R.ok("查询成功", productList);
         log.info("ProductServiceImpl.getProductListByProductIds业务结束，结果:{}",ok);
         return ok;
+    }
+
+    @Override
+    public void subNumber(List<OrderToProduct> orderToProducts) {
+        //转换为map
+        Map<Integer, Integer> collect = orderToProducts.stream().collect(Collectors.toMap(OrderToProduct::getProductId, OrderToProduct::getNum));
+        //生成更新数据
+        Set<Integer> integers = collect.keySet();
+        List<Product> productList = baseMapper.selectBatchIds(integers);
+        for (Product product : productList) {
+            Integer num = collect.get(product.getProductId());
+            product.setProductNum(product.getProductNum()-num);
+            product.setProductSales(product.getProductSales()+num);
+        }
+        //批量更新
+        updateBatchById(productList);
+        log.info("ProductServiceImpl.subNumber业务结束，结果:{}","库存和销售量的修改完毕");
     }
 }
