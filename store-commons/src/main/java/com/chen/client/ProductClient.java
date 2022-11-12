@@ -1,8 +1,14 @@
 package com.chen.client;
 
+import com.chen.param.ProductCollectParam;
 import com.chen.pojo.Product;
+import com.chen.untils.R;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -22,4 +28,13 @@ public interface ProductClient {
      */
     @GetMapping("/product/list")
     List<Product> getAllProduct();
+
+    /**
+     * 根据产品id产品列表
+     *
+     * @param productCollectParam 收集产品参数
+     * @return {@link R}
+     */
+    @PostMapping("/product/collect/list")
+    R getProductListByProductIds(@RequestBody ProductCollectParam productCollectParam);
 }

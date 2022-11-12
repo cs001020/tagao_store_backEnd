@@ -5,7 +5,10 @@ import com.chen.pojo.Picture;
 import com.chen.product.mapper.PictureMapper;
 import com.chen.product.service.PictureService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 图片服务impl
@@ -16,4 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture> implements PictureService {
+    @Override
+    @Cacheable(value = "list.product",key = "#root.methodName",cacheManager = "cacheManagerDay")
+    public List<Picture> list() {
+        return super.list();
+    }
 }

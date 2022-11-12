@@ -6,6 +6,7 @@ import com.chen.carousel.service.CarouselService;
 import com.chen.pojo.Carousel;
 import com.chen.untils.R;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CarouselServiceImpl extends ServiceImpl<CarouselMapper,Carousel> implements CarouselService {
     @Override
+    @Cacheable(value = "list.carousel",key = "#root.methodName",cacheManager = "cacheManagerDay")
     public R getCarouselList() {
         //查询数据库 按照优先级降序排序
         List<Carousel> list = lambdaQuery().orderByDesc(Carousel::getPriority).list();
