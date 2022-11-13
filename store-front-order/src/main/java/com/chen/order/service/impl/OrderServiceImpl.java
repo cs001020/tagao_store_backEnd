@@ -6,11 +6,13 @@ import com.chen.order.mapper.OrderMapper;
 import com.chen.order.service.OrderService;
 import com.chen.param.CartListParam;
 import com.chen.param.OrderParam;
+import com.chen.param.PageParam;
 import com.chen.param.ProductCollectParam;
 import com.chen.pojo.Order;
 import com.chen.pojo.Product;
 import com.chen.to.OrderToProduct;
 import com.chen.untils.R;
+import com.chen.vo.AdminOrderVo;
 import com.chen.vo.CartVo;
 import com.chen.vo.OrderVo;
 import lombok.extern.slf4j.Slf4j;
@@ -106,5 +108,29 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         log.info("OrderServiceImpl.orderList业务结束，结果:{}",res);
         return R.ok("订单数据获取成功",res);
+    }
+
+    @Override
+    public R removeCheck(Integer productId) {
+        Long count = lambdaQuery().eq(Order::getProductId, productId).count();
+        if (count!=0){
+            return R.fail("存在订单引用，无法删除");
+        }
+        return R.ok("无订单引用");
+    }
+
+    @Override
+    public R adminList(PageParam pageParam) {
+
+        int offset = (pageParam.getCurrentPage()-1)*pageParam.getPageSize();
+        int number = pageParam.getPageSize();
+
+        //查询数量
+        Long total = baseMapper.selectCount(null);
+        //自定义查询
+        List<AdminOrderVo> adminOrderVoList = baseMapper.selectAdminOrders(offset,number);
+
+
+        return R.ok("查询成功",adminOrderVoList,total);
     }
 }

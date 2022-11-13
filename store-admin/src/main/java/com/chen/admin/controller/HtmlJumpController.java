@@ -2,7 +2,10 @@ package com.chen.admin.controller;
 
 import com.chen.client.CategoryClient;
 import com.chen.pojo.Category;
+import com.chen.untils.R;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -16,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Slf4j
@@ -132,9 +137,21 @@ public class HtmlJumpController {
         log.info("HtmlJumpController.productSaveHtml业务结束，结果:{}","成功跳转");
 
         //查询类别列表,存入共享域
-//        List<Category> list = categoryClient.list();
-//        model.addAttribute("clist",list);
+        getCategoryList(model);
         return "product/add";
+    }
+
+    private void getCategoryList(Model model) {
+        R list = categoryClient.list();
+        List<LinkedHashMap> data = (List<LinkedHashMap>) list.getData();
+        List<Category> categoryList=new ArrayList<>(data.size());
+        for (LinkedHashMap datum : data) {
+            Category category = new Category();
+            category.setCategoryId((Integer) datum.get("category_id"));
+            category.setCategoryName((String) datum.get("category_name"));
+            categoryList.add(category);
+        }
+        model.addAttribute("clist",categoryList);
     }
 
     /**
@@ -146,8 +163,7 @@ public class HtmlJumpController {
         log.info("HtmlJumpController.productUpdateHtml业务结束，结果:{}","成功跳转");
 
         //查询类别列表,存入共享域
-//        List<Category> list = categoryClient.list();
-//        model.addAttribute("clist",list);
+        getCategoryList(model);
         return "product/edit";
     }
 }

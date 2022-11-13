@@ -3,6 +3,7 @@ package com.chen.order.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chen.param.CartListParam;
 import com.chen.param.OrderParam;
+import com.chen.param.PageParam;
 import com.chen.pojo.Order;
 import com.chen.untils.R;
 
@@ -28,4 +29,20 @@ public interface OrderService extends IService<Order>  {
      * @return {@link R}
      */
     R orderList(CartListParam cartListParam);
+
+    /**
+     * 删除检查
+     *
+     * @param productId 产品id
+     * @return {@link R}
+     */
+    R removeCheck(Integer productId);
+
+    /**
+     * 管理列表
+     *
+     * @param pageParam 页面参数
+     * @return {@link R}
+     */
+    R adminList(PageParam pageParam);
 }

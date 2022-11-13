@@ -1,6 +1,7 @@
 package com.chen.collect.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chen.client.ProductClient;
 import com.chen.collect.mapper.CollectMapper;
@@ -67,5 +68,12 @@ public class CollectServiceImpl extends ServiceImpl<CollectMapper, Collect> impl
         int rows = baseMapper.delete(collectLambdaQueryWrapper);
         log.info("CollectServiceImpl.removeCollect业务结束，结果:{}",rows);
         return R.ok("收藏移除成功");
+    }
+
+    @Override
+    public R remove(Integer productId) {
+        boolean remove = removeById(productId);
+        log.info("CollectServiceImpl.remove业务结束，结果:{}",remove);
+        return R.ok("收藏商品删除成功");
     }
 }

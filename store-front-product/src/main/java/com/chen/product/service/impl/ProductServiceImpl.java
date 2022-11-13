@@ -1,11 +1,11 @@
 package com.chen.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.chen.client.CategoryClient;
-import com.chen.client.SearchClient;
+import com.chen.client.*;
 import com.chen.param.*;
 import com.chen.pojo.Category;
 import com.chen.pojo.Picture;
@@ -16,14 +16,14 @@ import com.chen.product.service.ProductService;
 import com.chen.to.OrderToProduct;
 import com.chen.untils.R;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +40,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     private CategoryClient categoryClient;
     @Resource
     private SearchClient searchClient;
+    @Resource
+    private CartClient cartClient;
+    @Resource
+    private OrderClient orderClient;
+    @Resource
+    private CollectClient collectClient;
     @Resource
     private PictureService pictureService;
 
@@ -169,5 +175,70 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         //批量更新
         updateBatchById(productList);
         log.info("ProductServiceImpl.subNumber业务结束，结果:{}","库存和销售量的修改完毕");
+    }
+
+    @Override
+    @CacheEvict(value = "list.product",allEntries = true)
+    public R adminSave(ProductSaveParam productSaveParam) {
+        Product product = new Product();
+        BeanUtils.copyProperties(productSaveParam,product);
+        //数据库保存
+        boolean save = save(product);
+        log.info("ProductServiceImpl.adminSave业务结束，结果:{}",save);
+        //图片获取
+        String pictures = productSaveParam.getPictures();
+        if (StringUtils.isEmpty(pictures)){
+            return R.ok("商品添加成功");
+        }
+        String[] split = pictures.split("\\+");
+        List<Picture> pictureList=new ArrayList<>(split.length);
+        for (String s : split) {
+            Picture picture = new Picture();
+            picture.setProductId(product.getProductId());
+            picture.setProductPicture(s);
+            pictureList.add(picture);
+        }
+        //插入数据库
+        boolean b = pictureService.saveBatch(pictureList);
+        //es同步数据
+        searchClient.save(product);
+        log.info("ProductServiceImpl.adminSave业务结束，结果:{}",b);
+        return R.ok("商品添加成功");
+    }
+
+    @Override
+    @CacheEvict(value = {"list.product","product"},allEntries = true)
+    public R adminUpdate(Product product) {
+        //更新商品数据
+        updateById(product);
+        //同步es
+        searchClient.save(product);
+        return R.ok("商品数据更新成功");
+    }
+
+    @Override
+    @CacheEvict(value = {"list.product","product"},allEntries = true)
+    public R adminRemove(Integer productId) {
+        //检查是否能够删除
+        R r = cartClient.removeCheck(productId);
+        if (R.FAIL_CODE.equals(r.getCode())){
+            log.info("ProductServiceImpl.adminRemove业务结束，结果:{}",r.getMsg());
+            return r;
+        }
+        r = orderClient.removeCheck(productId);
+        if (R.FAIL_CODE.equals(r.getCode())){
+            log.info("ProductServiceImpl.adminRemove业务结束，结果:{}",r.getMsg());
+            return r;
+        }
+        //清除收藏列表
+        collectClient.remove(productId);
+        //商品删除
+        boolean removeById = removeById(productId);
+        //删除商品图片
+        pictureService.removeByProductId(productId);
+        //es同步
+        searchClient.remove(productId);
+        log.info("ProductServiceImpl.adminRemove业务结束，结果:{}",removeById);
+        return R.ok("删除成功");
     }
 }

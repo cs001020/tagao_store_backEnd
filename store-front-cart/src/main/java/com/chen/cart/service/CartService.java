@@ -44,4 +44,12 @@ public interface CartService extends IService<Cart> {
      * @return {@link R}
      */
     R removeCart(Cart cart);
+
+    /**
+     * 删除检查
+     *
+     * @param productId 产品id
+     * @return {@link R}
+     */
+    R removeCheck(Integer productId);
 }

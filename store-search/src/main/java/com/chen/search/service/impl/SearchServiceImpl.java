@@ -1,6 +1,7 @@
 package com.chen.search.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.chen.doc.ProductDoc;
 import com.chen.param.ProductSearchParam;
 import com.chen.pojo.Product;
 import com.chen.search.service.SearchService;
@@ -8,10 +9,13 @@ import com.chen.untils.R;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -79,5 +83,22 @@ public class SearchServiceImpl implements SearchService {
         R ok = R.ok("搜索成功", products, total);
         log.info("SearchServiceImpl.searchProduct业务结束，结果:{}",ok);
         return ok;
+    }
+
+    @Override
+    public R save(Product product) throws IOException {
+        IndexRequest indexRequest = new IndexRequest("product").id(product.getProductId().toString());
+        ProductDoc productDoc = new ProductDoc(product);
+        ObjectMapper objectMapper = new ObjectMapper();
+        indexRequest.source(objectMapper.writeValueAsString(productDoc), XContentType.JSON);
+        restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+        return R.ok("数据同步成功");
+    }
+
+    @Override
+    public R remove(Integer productId) throws IOException {
+        DeleteRequest deleteRequest = new DeleteRequest("product").id(productId.toString());
+        restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
+        return R.ok("数据同步成功");
     }
 }

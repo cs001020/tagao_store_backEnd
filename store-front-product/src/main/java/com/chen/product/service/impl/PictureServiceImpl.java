@@ -1,5 +1,6 @@
 package com.chen.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chen.pojo.Picture;
 import com.chen.product.mapper.PictureMapper;
@@ -23,5 +24,11 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture> impl
     @Cacheable(value = "list.product",key = "#root.methodName",cacheManager = "cacheManagerDay")
     public List<Picture> list() {
         return super.list();
+    }
+
+    public void removeByProductId(Integer productId){
+        LambdaQueryWrapper<Picture> pictureLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        pictureLambdaQueryWrapper.eq(Picture::getProductId, productId);
+        baseMapper.delete(pictureLambdaQueryWrapper);
     }
 }
