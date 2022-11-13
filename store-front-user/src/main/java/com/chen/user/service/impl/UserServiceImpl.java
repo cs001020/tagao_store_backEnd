@@ -1,7 +1,10 @@
 package com.chen.user.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chen.constants.UserConstants;
+import com.chen.param.CartListParam;
+import com.chen.param.PageParam;
 import com.chen.param.UserCheckParam;
 import com.chen.param.UserLoginParam;
 import com.chen.pojo.User;
@@ -82,5 +85,57 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         loginUser.setUserPhonenumber(null);
         //返回结果
         return R.ok("登陆成功！",loginUser);
+    }
+
+    @Override
+    public R listPage(PageParam param) {
+        Page<User> page = lambdaQuery().page(new Page<>(param.getCurrentPage(), param.getPageSize()));
+        R ok = R.ok("查询成功", page.getRecords(), page.getTotal());
+        log.info("UserServiceImpl.listPage业务结束，结果:{}",ok);
+        return ok;
+    }
+
+    @Override
+    public R remove(CartListParam cartListParam) {
+        boolean b = removeById(cartListParam.getUserId());
+        log.info("UserServiceImpl.remove业务结束，结果:{}",b);
+        return R.ok("用户数据删除成功");
+    }
+
+    @Override
+    public R update(User user) {
+        Long count = lambdaQuery().eq(User::getUserId, user.getUserId())
+                .eq(User::getPassword, user.getPassword()).count();
+
+        if (count==0){
+            String encodePassword = MD5Util.encode(user.getPassword() + UserConstants.USER_SALT);
+            user.setPassword(encodePassword);
+        }
+        boolean b = updateById(user);
+        log.info("UserServiceImpl.update业务结束，结果:{}",b);
+        return R.ok("用户信息修改成功!");
+    }
+
+    @Override
+    public R sava(User user) {
+        //检查账号是否存在
+        Long total = lambdaQuery().eq(User::getUserName, user.getUserName()).count();
+        //查询结果处理
+        if (total!=0){
+            log.info("UserServiceImpl.register业务结束，结果:{}","账号存在注册失败");
+            return R.ok("账号已经存在不可添加！");
+        }
+        //密码加密
+        String password = MD5Util.encode(user.getPassword()+ UserConstants.USER_SALT);
+        user.setPassword(password);
+        //插入数据库
+        int insertCount = baseMapper.insert(user);
+        //返回结果封装
+        if (insertCount==0){
+            log.info("UserServiceImpl.register业务结束，结果:{}","数据库插入失败！添加失败！");
+            return R.fail("添加失败！请稍微再试！");
+        }
+        log.info("UserServiceImpl.register业务结束，结果:{}","添加成功！");
+        return R.ok("添加成功！");
     }
 }

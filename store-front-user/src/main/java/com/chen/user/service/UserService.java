@@ -1,6 +1,8 @@
 package com.chen.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.chen.param.CartListParam;
+import com.chen.param.PageParam;
 import com.chen.param.UserCheckParam;
 import com.chen.param.UserLoginParam;
 import com.chen.pojo.User;
@@ -37,4 +39,36 @@ public interface UserService extends IService<User> {
      * @return {@link R}
      */
     R login(UserLoginParam userLoginParam);
+
+    /**
+     * 列表页面
+     *
+     * @param param 参数
+     * @return {@link R}
+     */
+    R listPage(PageParam param);
+
+    /**
+     * 删除
+     *
+     * @param cartListParam 购物车列表参数
+     * @return {@link R}
+     */
+    R remove(CartListParam cartListParam);
+
+    /**
+     * 更新
+     *
+     * @param user 用户
+     * @return {@link R}
+     */
+    R update(User user);
+
+    /**
+     * 萨瓦河
+     *
+     * @param user 用户
+     * @return {@link R}
+     */
+    R sava(User user);
 }
