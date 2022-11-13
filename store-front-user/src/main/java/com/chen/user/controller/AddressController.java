@@ -1,6 +1,7 @@
 package com.chen.user.controller;
 
 import com.chen.param.AddressListParam;
+import com.chen.param.AddressParam;
 import com.chen.param.AddressRemoveParam;
 import com.chen.pojo.Address;
 import com.chen.untils.R;
@@ -34,11 +35,12 @@ public class AddressController {
         return addressService.list(addressListParam);
     }
     @PostMapping("/save")
-    public R saveAddress(@RequestBody @Validated Address address,BindingResult bindingResult){
+    public R saveAddress(@RequestBody @Validated AddressParam addressParam, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return R.fail("参数异常,添加失败");
         }
-        return addressService.saveAddress(address);
+        addressParam.getAdd().setUserId(addressParam.getUserId());
+        return addressService.saveAddress(addressParam.getAdd());
     }
     @PostMapping("/remove")
     public R removeAddress(@RequestBody @Validated AddressRemoveParam addressRemoveParam,BindingResult bindingResult){

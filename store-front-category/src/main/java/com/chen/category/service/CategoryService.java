@@ -1,6 +1,7 @@
 package com.chen.category.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.chen.param.PageParam;
 import com.chen.param.ProductHotParam;
 import com.chen.pojo.Category;
 import com.chen.untils.R;
@@ -27,4 +28,36 @@ public interface CategoryService extends IService<Category> {
      * @return {@link R}
      */
     R hotsCategory(ProductHotParam productHotParam);
+
+    /**
+     * 列表页面
+     *
+     * @param param 参数
+     * @return {@link R}
+     */
+    R listPage(PageParam param);
+
+    /**
+     * 管理保存
+     *
+     * @param category 类别
+     * @return {@link R}
+     */
+    R adminSave(Category category);
+
+    /**
+     * 管理员删除
+     *
+     * @param categoryId 类别id
+     * @return {@link R}
+     */
+    R adminRemove(Integer categoryId);
+
+    /**
+     * 更新
+     *
+     * @param category 类别
+     * @return {@link R}
+     */
+    R update(Category category);
 }
