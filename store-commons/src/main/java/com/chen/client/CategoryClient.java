@@ -1,6 +1,8 @@
 package com.chen.client;
 
+import com.chen.param.PageParam;
 import com.chen.param.ProductHotParam;
+import com.chen.pojo.Category;
 import com.chen.untils.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.BindingResult;
@@ -26,4 +28,16 @@ public interface CategoryClient {
 
     @GetMapping("/category/list")
     R list();
+
+    @PostMapping("/category/admin/list")
+    R adminPageList(@RequestBody PageParam param);
+
+    @PostMapping("/category/admin/save")
+    R adminSave(@RequestBody Category category);
+
+    @PostMapping("/category/admin/remove")
+    R adminRemove(@RequestBody Integer categoryId);
+
+    @PostMapping("/category/admin/update")
+    R adminUpdate(@RequestBody Category category);
 }
