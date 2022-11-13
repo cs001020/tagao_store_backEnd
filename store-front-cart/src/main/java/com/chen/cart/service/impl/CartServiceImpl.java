@@ -127,4 +127,13 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
         log.info("CartServiceImpl.removeCart业务结束，结果:{}",remove);
         return R.ok("购物车删除成功");
     }
+
+    @Override
+    public R removeCheck(Integer productId) {
+        Long count = lambdaQuery().eq(Cart::getProductId, productId).count();
+        if (count!=0){
+            return R.fail("有购物车引用，删除是啊比");
+        }
+        return R.ok("无购物车引用");
+    }
 }

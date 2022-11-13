@@ -3,6 +3,7 @@ package com.chen.order.controller;
 import com.chen.order.service.OrderService;
 import com.chen.param.CartListParam;
 import com.chen.param.OrderParam;
+import com.chen.param.PageParam;
 import com.chen.param.ProductCollectParam;
 import com.chen.untils.R;
 import org.springframework.validation.BindingResult;
@@ -38,5 +39,15 @@ public class OrderController {
             return R.fail("参数异常，查询失败！");
         }
         return orderService.orderList(cartListParam);
+    }
+
+    @PostMapping("/remove/check")
+    public R removeCheck(@RequestBody Integer productId){
+        return orderService.removeCheck(productId);
+    }
+
+    @PostMapping("/admin/list")
+    public R adminList(@RequestBody PageParam pageParam){
+        return orderService.adminList(pageParam);
     }
 }

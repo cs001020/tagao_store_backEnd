@@ -52,4 +52,9 @@ public class CartController {
     public R removeCart(@RequestBody Cart cart){
         return cartService.removeCart(cart);
     }
+
+    @PostMapping("/remove/check")
+    public R removeCheck(@RequestBody Integer productId) {
+        return cartService.removeCheck(productId);
+    }
 }

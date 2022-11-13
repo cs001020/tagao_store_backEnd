@@ -85,4 +85,28 @@ public interface ProductService extends IService<Product> {
      * @param orderToProducts 以产品
      */
     void subNumber(List<OrderToProduct> orderToProducts);
+
+    /**
+     * 管理保存
+     *
+     * @param productSaveParam 产品保存参数
+     * @return {@link R}
+     */
+    R adminSave(ProductSaveParam productSaveParam);
+
+    /**
+     * 管理更新
+     *
+     * @param product 产品
+     * @return {@link R}
+     */
+    R adminUpdate(Product product);
+
+    /**
+     * 管理员删除
+     *
+     * @param productId 产品id
+     * @return {@link R}
+     */
+    R adminRemove(Integer productId);
 }

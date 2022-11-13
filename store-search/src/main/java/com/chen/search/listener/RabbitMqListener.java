@@ -25,6 +25,7 @@ import java.io.IOException;
  * @date 2022/11/11
  */
 @Component
+@Deprecated
 public class RabbitMqListener {
 
     @Resource

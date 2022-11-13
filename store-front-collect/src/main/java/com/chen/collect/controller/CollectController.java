@@ -34,7 +34,12 @@ public class CollectController {
     }
 
     @PostMapping("/remove")
-    private R removeCollect(@RequestBody Collect collect){
+    public R removeCollect(@RequestBody Collect collect){
         return collectService.removeCollect(collect);
+    }
+
+    @PostMapping("/remove/product")
+    public R remove(@RequestBody Integer productId){
+        return collectService.remove(productId);
     }
 }

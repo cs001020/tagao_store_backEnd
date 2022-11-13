@@ -1,7 +1,6 @@
 package com.chen.product;
 
-import com.chen.client.CategoryClient;
-import com.chen.client.SearchClient;
+import com.chen.client.*;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +15,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @SpringBootApplication
 @MapperScan("com.chen.product.mapper")
-@EnableFeignClients(clients = {CategoryClient.class, SearchClient.class})
+@EnableFeignClients(clients = {CategoryClient.class, SearchClient.class, CartClient.class, CollectClient.class, OrderClient.class})
 @EnableCaching
 public class ProductApplication {
     public static void main(String[] args) {

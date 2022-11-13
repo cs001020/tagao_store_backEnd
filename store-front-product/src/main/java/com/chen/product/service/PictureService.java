@@ -10,4 +10,10 @@ import com.chen.pojo.Picture;
  * @date 2022/11/11
  */
 public interface PictureService extends IService<Picture> {
+    /**
+     * 删除产品id
+     *
+     * @param productId 产品id
+     */
+    void removeByProductId(Integer productId);
 }

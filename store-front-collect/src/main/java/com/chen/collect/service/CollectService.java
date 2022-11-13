@@ -35,4 +35,12 @@ public interface CollectService extends IService<Collect> {
      * @return {@link R}
      */
     R removeCollect(Collect collect);
+
+    /**
+     * 删除
+     *
+     * @param productId 产品id
+     * @return {@link R}
+     */
+    R remove(Integer productId);
 }

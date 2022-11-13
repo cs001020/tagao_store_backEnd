@@ -2,6 +2,7 @@ package com.chen.client;
 
 import com.chen.param.ProductCollectParam;
 import com.chen.param.ProductIdParam;
+import com.chen.param.ProductSaveParam;
 import com.chen.pojo.Product;
 import com.chen.untils.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -47,4 +48,13 @@ public interface ProductClient {
 
     @PostMapping("/product/admin/count")
     Long adminCount(@RequestBody Integer categoryId);
+
+    @PostMapping("/product/admin/save")
+    R adminSave(@RequestBody ProductSaveParam productSaveParam);
+
+    @PostMapping("/product/admin/update")
+    R adminUpdate(@RequestBody Product product);
+
+    @PostMapping("/product/admin/remove")
+    R adminRemove(@RequestBody Integer productId);
 }
